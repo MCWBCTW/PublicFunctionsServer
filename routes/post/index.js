@@ -20,18 +20,22 @@ router.post('/test', function (req, res, next) {
 
 // 分片上传文件
 router.post('/uploadFile', function (req, res, next) {
-    let form = new multiparty.Form();
+    let form = new multiparty.Form({uploadDir: './files'});
     //这里可以设置图片上传的路径，默认为当前用户下的temp文件夹
-    form.uploadDir = "/static/img";
+    // form.uploadDir = "./files";
     form.parse(req, function(err, fields, files) {
         //files即为上传图片的信息
         console.log(fields, files)
         if(!err){
+            console.log('1===', fields);
+            console.log('2===', files);
+            let upFile = files.file[0]
+            // 重命名
             res.send({
                 code: 200,
-                msg: '成功',
-                err
-            });
+                msg: '上传成功',
+                fileSize: ((upFile.size) / 1048576).toFixed(2) + 'M'
+            })
         } else {
             res.send({
                 code: 400,
