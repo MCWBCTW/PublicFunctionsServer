@@ -48,6 +48,8 @@ router.post('/uploadFile', function (req, res, next) {
                 err: null
             })
         } catch (err) {
+            let filename = fields.filename[0]; // 文件名
+            let hash = fields.hash[0]; // hash 标识
             res.status(500).send({
                 code: 500,
                 msg: '上传失败',
