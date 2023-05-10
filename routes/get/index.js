@@ -49,7 +49,27 @@ router.get('/mergeFile', async (req, res) => {
     }
 })
 
-
+// 校验文件是否上传过
+router.get('/inspectFile', async (req, res) => {
+    const { filename } = req.query
+    let fileUrl = `${STATIC_FILES}/${filename}`; // 如果文件已上传过，将会保存在此地址
+    if (fs.existsSync(fileUrl)) {
+        // 文件存在，已上传过
+        res.status(200).send({
+            code: 201,
+            msg: '文件已上传',
+            data: null,
+            err: null
+        })
+    } else {
+        res.status(200).send({
+            code: 202,
+            msg: '文件未上传',
+            data: null,
+            err: null
+        })
+    }
+})
 
 
 

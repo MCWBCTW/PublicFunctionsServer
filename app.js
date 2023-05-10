@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+// const bodyParser = require('body-parser');
 const routes = require('./routes'); 
 var app = express();
 
@@ -12,6 +13,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(cors()); // 注入cors模块解决跨域
+// app.use(bodyParser.urlencoded({extended:false}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
