@@ -72,5 +72,22 @@ router.get('/inspectFile', async (req, res) => {
 })
 
 
+// 直接返回前端10万条数据，配合实现虚拟滚动
+router.get('/oneHundredThousand', async (req, res) => {
+
+    let data = []; // 返回的数据
+    for(let i = 0; i < 100000; i++){
+        data.push({
+            id: i,
+            msg: Math.random() + ''
+        })
+    }
+    res.status(200).send({
+        code: 200,
+        msg: '获取成功',
+        data,
+        err: null
+    })
+})
 
 module.exports = router;
