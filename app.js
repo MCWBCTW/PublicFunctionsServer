@@ -6,6 +6,33 @@ var logger = require('morgan');
 const cors = require('cors');
 // const bodyParser = require('body-parser');
 const routes = require('./routes'); 
+
+const db = require("./db/index");
+
+var websocket = require('ws');
+var server = new websocket.Server({
+  port: 3060
+});
+
+server.on('open', () => {
+  console.log('webSocket开启');
+});
+server.on('close', () => {
+  console.log('webSocket关闭');
+});
+server.on('connection', (ws, req) => {
+  console.log('webSocket连接成功');
+  ws.on('message', (data) => {
+    // data: 接收信息
+    server.clients.forEach((item) => {
+      if (item.readyState === ws.OPEN) {
+        item.send('' + data);
+      }
+    });
+  });
+});
+
+
 var app = express();
 
 // view engine setup
