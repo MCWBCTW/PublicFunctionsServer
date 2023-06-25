@@ -4,6 +4,8 @@ const { Buffer } = require('buffer')
 const fs = require('fs')
 const path = require('path')
 
+const db = require('../../db/index');
+
 const tools = require('../../utils/tools')
 // 上传文件的临时路径
 const STATIC_TEMPORARY = path.join(__dirname, '../../static/temporary')
@@ -88,6 +90,62 @@ router.get('/oneHundredThousand', async (req, res) => {
         data,
         err: null
     })
+})
+
+
+// 返回数据库中已储存的设备数据，
+router.get('/getDeviceInfo', async (req, res) => {
+    db.connect((err) => {
+        if (!err) {
+            console.log('数据库连接成功');
+
+            db.query('SELECT * FROM webRTC', function (err, result) {
+                if(err){
+                    console.log('[SELECT ERROR] - ',err.message);
+                    res.status(200).send({
+                        code: 500,
+                        msg: '数据库查询失败！',
+                        data: null,
+                        err: err
+                    })
+                    db.end();
+                } else {
+                    console.log('--------------------------SELECT----------------------------');
+                    console.log(result);
+                    console.log('------------------------------------------------------------\n\n');  
+                    db.end((err) => {
+                        if (err) {
+                            console.error('Error closing MySQL connection: ', err);
+                            res.status(200).send({
+                                code: 500,
+                                msg: '获取失败',
+                                data: [],
+                                err: err
+                            })
+                            return;
+                        }
+                        console.log('MySQL connection closed.');
+                        res.status(200).send({
+                            code: 200,
+                            msg: '获取成功',
+                            data: result,
+                            err: null
+                        })
+                    });
+
+                    
+                }
+                
+            });
+        } else {
+            res.status(200).send({
+                code: 500,
+                msg: '数据库连接失败！',
+                data: null,
+                err: err
+            })
+        }
+    });
 })
 
 module.exports = router;

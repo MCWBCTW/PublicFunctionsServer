@@ -7,8 +7,6 @@ const cors = require('cors');
 // const bodyParser = require('body-parser');
 const routes = require('./routes'); 
 
-const db = require("./db/index");
-
 var websocket = require('ws');
 var server = new websocket.Server({
   port: 3060
