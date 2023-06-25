@@ -12,8 +12,10 @@ const STATIC_FILES = path.join(__dirname, '../../static/files')
 const STATIC_TEMPORARY = path.join(__dirname, '../../static/temporary')
 
 
+const db = require('../../db/index');
+
+
 router.post('/test', function (req, res, next) {
-    console.log(req.body)
     res.send({
       code: 200,
       msg: '/post/test 请求成功'
@@ -66,7 +68,32 @@ router.post('/uploadFile', function (req, res, next) {
 });
 
 
-
+// 新增设备信息
+router.post('/addDevice', async (req, res) => {
+    db.add('INSERT INTO webRTC(deviceId,deviceName,online,created_at) VALUES(?,?,?,?)', [
+        req.body.deviceId,
+        req.body.deviceName,
+        req.body.online,
+        req.body.created_at,
+    ], (err, result) => {
+        if (err) {
+            res.status(200).send({
+                code: 200,
+                msg: '上传失败!',
+                data: {},
+                err
+            })
+            return
+        }
+        res.status(200).send({
+            code: 200,
+            msg: '上传成功',
+            data: result,
+            err: null
+        })
+    })
+    
+})
 
 
 module.exports = router;

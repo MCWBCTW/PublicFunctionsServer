@@ -95,57 +95,22 @@ router.get('/oneHundredThousand', async (req, res) => {
 
 // 返回数据库中已储存的设备数据，
 router.get('/getDeviceInfo', async (req, res) => {
-    db.connect((err) => {
-        if (!err) {
-            console.log('数据库连接成功');
-
-            db.query('SELECT * FROM webRTC', function (err, result) {
-                if(err){
-                    console.log('[SELECT ERROR] - ',err.message);
-                    res.status(200).send({
-                        code: 500,
-                        msg: '数据库查询失败！',
-                        data: null,
-                        err: err
-                    })
-                    db.end();
-                } else {
-                    console.log('--------------------------SELECT----------------------------');
-                    console.log(result);
-                    console.log('------------------------------------------------------------\n\n');  
-                    db.end((err) => {
-                        if (err) {
-                            console.error('Error closing MySQL connection: ', err);
-                            res.status(200).send({
-                                code: 500,
-                                msg: '获取失败',
-                                data: [],
-                                err: err
-                            })
-                            return;
-                        }
-                        console.log('MySQL connection closed.');
-                        res.status(200).send({
-                            code: 200,
-                            msg: '获取成功',
-                            data: result,
-                            err: null
-                        })
-                    });
-
-                    
-                }
-                
-            });
-        } else {
+    db.query('SELECT * FROM webRTC', (err, result) => {
+        if (err) {
             res.status(200).send({
                 code: 500,
-                msg: '数据库连接失败！',
+                msg: '数据库查询失败!',
                 data: null,
-                err: err
+                err
             })
         }
-    });
+        res.status(200).send({
+            code: 200,
+            msg: '数据库查询成功!',
+            data: result,
+            err: null
+        })
+    })
 })
 
 module.exports = router;

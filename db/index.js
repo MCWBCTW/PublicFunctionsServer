@@ -1,13 +1,13 @@
 // 引入mysql
 const mysql = require("mysql");
-// var db = mysql.createConnection({     
-//     host: 'localhost',       
-//     user: 'root',              
-//     password: '123456',       
-//     port: '3306',                   
-//     database: 'public' 
-// }); 
 
+// 视频通话设备，数据库基本数据格式
+// {
+//   deviceId: '',
+//   deviceName: '',
+//   online: '',
+//   created_at: '',
+// }
 
 
 // 建立一个连接池
@@ -19,7 +19,100 @@ const pool = mysql.createPool({
     database: 'public',
     port: '3306',
 });
+
+
+const db = {
+    // 增
+    add(SQL, data, callback){
+        pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            connection.query(SQL, data, (error, result) => {
+                connection.release(); // 释放连接
+
+                if (error) {
+                    callback(error);
+                    return;
+                }
+
+                callback(null, result);
+            })
+        })
+    },
+    // 删 
+    delete(SQL, id, callback){
+        pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+        
+            connection.query(SQL, id, (error, results) => {
+                connection.release(); // 释放连接
+            
+                if (error) {
+                    callback(error);
+                    return;
+                }
+            
+                callback(null, results);
+            });
+          });
+    },
+    // 改
+    modify(SQL, id, newData, callback){
+        pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+        
+            connection.query(SQL, [newData, id], (error, results) => {
+                connection.release(); // 释放连接
+            
+                if (error) {
+                    callback(error);
+                    return;
+                }
+            
+                callback(null, results);
+            });
+          });
+    },
+    // 查
+    query(SQL, callback){
+        pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+                return;
+            }
+        
+            connection.query(SQL, (error, results) => {
+                connection.release(); // 释放连接
+            
+                if (error) {
+                    callback(error);
+                    return;
+                }
+            
+                callback(null, results);
+            });
+          });
+    },
+}
    
+
+
+// var db = mysql.createConnection({     
+//     host: 'localhost',       
+//     user: 'root',              
+//     password: '123456',       
+//     port: '3306',                   
+//     database: 'public' 
+// }); 
 // db.connect((err) => {
 //     if (!err) {
 //         console.log('数据库连接成功');
@@ -40,16 +133,9 @@ const pool = mysql.createPool({
 
 // db.end();
 
-// 视频通话设备，数据库基本数据格式
-// {
-//   deviceId: '',
-//   deviceName: '',
-//   online: '',
-//   created_at: '',
-// }
 
 // var  addSql = 'INSERT INTO webRTC(deviceId,deviceName,online,created_at) VALUES(?,?,?,?)';
-// var  addSqlParams = ['123', '测试设备1','1', '2020-10-10 12:00:00'];
+// var  addSqlParams = ['123', '测试设备1', 1, '2020-10-10 12:00:00'];
 // //增
 // db.query(addSql, addSqlParams, function (err, result) {
 //         if(err){
