@@ -1,13 +1,24 @@
 // 引入mysql
 const mysql = require("mysql");
+// var db = mysql.createConnection({     
+//     host: 'localhost',       
+//     user: 'root',              
+//     password: '123456',       
+//     port: '3306',                   
+//     database: 'public' 
+// }); 
+
+
+
 // 建立一个连接池
-var db = mysql.createConnection({     
-    host: 'localhost',       
-    user: 'root',              
-    password: '123456',       
-    port: '3306',                   
-    database: 'public' 
-  }); 
+const pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'root',
+    password: '123456',
+    database: 'public',
+    port: '3306',
+});
    
 // db.connect((err) => {
 //     if (!err) {
