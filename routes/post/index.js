@@ -78,7 +78,7 @@ router.post('/addDevice', async (req, res) => {
     ], (err, result) => {
         if (err) {
             res.status(200).send({
-                code: 200,
+                code: 500,
                 msg: '上传失败!',
                 data: {},
                 err
@@ -93,6 +93,32 @@ router.post('/addDevice', async (req, res) => {
         })
     })
     
+})
+
+
+
+// 客户端关闭，修改数据库中设备在线状态
+router.post('/editOnline', async (req, res) => {
+    let deviceId = req.body.deviceId; // 当前客户端的设备号
+
+    db.query(`SELECT * FROM webRTC WHERE deviceId = ${deviceId} LIMIT 5;`, (err, result) => {
+        if (err) {
+            res.status(200).send({
+                code: 500,
+                msg: '修改失败!',
+                data: {},
+                err
+            })
+            return
+        }
+        res.status(200).send({
+            code: 200,
+            msg: '修改成功!',
+            data: result,
+            err: null
+        })
+        return
+    })
 })
 
 

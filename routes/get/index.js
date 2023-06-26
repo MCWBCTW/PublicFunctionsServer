@@ -95,7 +95,7 @@ router.get('/oneHundredThousand', async (req, res) => {
 
 // 返回数据库中已储存的设备数据，
 router.get('/getDeviceInfo', async (req, res) => {
-    db.query('SELECT * FROM webRTC', (err, result) => {
+    db.query('SELECT * FROM webRTC WHERE online = 1 LIMIT 5', (err, result) => {
         if (err) {
             res.status(200).send({
                 code: 500,
