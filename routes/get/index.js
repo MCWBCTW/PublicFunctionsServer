@@ -93,9 +93,31 @@ router.get('/oneHundredThousand', async (req, res) => {
 })
 
 
-// 返回数据库中已储存的设备数据，
+// 返回数据库中已储存的设备数据，查询已在线的设备，以供前端选择在线设备进行视频通话
 router.get('/getDeviceInfo', async (req, res) => {
     db.query('SELECT * FROM webRTC WHERE online = 1 LIMIT 5', (err, result) => {
+        if (err) {
+            res.status(200).send({
+                code: 500,
+                msg: '数据库查询失败!',
+                data: null,
+                err
+            })
+        }
+        res.status(200).send({
+            code: 200,
+            msg: '数据库查询成功!',
+            data: result,
+            err: null
+        })
+    })
+})
+
+
+
+// 获取一个未在线的设备信息，作为此时请求用户的设备信息
+router.get('/setLocalDevice', async (req, res) => {
+    db.query('SELECT * FROM webRTC WHERE online = 0 LIMIT 1', (err, result) => {
         if (err) {
             res.status(200).send({
                 code: 500,
