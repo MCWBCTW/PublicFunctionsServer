@@ -63,14 +63,14 @@ const db = {
           });
     },
     // 改
-    modify(SQL, id, newData, callback){
+    modify(SQL, newData, id, callback){
         pool.getConnection((err, connection) => {
             if (err) {
                 callback(err);
                 return;
             }
         
-            connection.query(SQL, [newData, id], (error, results) => {
+            connection.query(SQL, [...newData, id], (error, results) => {
                 connection.release(); // 释放连接
             
                 if (error) {

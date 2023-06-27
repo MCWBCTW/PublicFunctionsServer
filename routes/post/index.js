@@ -100,7 +100,7 @@ router.post('/addDevice', async (req, res) => {
 // 客户端关闭，修改数据库中设备在线状态
 router.post('/editOnline', async (req, res) => {
     let id = req.body.id; // 当前客户端的设备号
-    db.query(`UPDATE webRTC SET online = 0 WHERE id = ${id}`, (err, result) => {
+    db.modify(`UPDATE webRTC SET online = ? WHERE id = ?`, [0], id, (err, result) => {
         if (err) {
             res.status(200).send({
                 code: 500,

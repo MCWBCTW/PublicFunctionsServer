@@ -125,13 +125,30 @@ router.get('/setLocalDevice', async (req, res) => {
                 data: null,
                 err
             })
+            return
         }
-        res.status(200).send({
-            code: 200,
-            msg: '数据库查询成功!',
-            data: result,
-            err: null
-        })
+        if (result.length) {
+            // 有获取到一个不在线的设备
+            db.modify('UPDATE webRTC SET online = ? WHERE id = ?', [1], result[0].id, (error) => {
+                if (error) {
+                    res.status(200).send({
+                        code: 500,
+                        msg: '数据库查询失败!',
+                        data: null,
+                        err: error
+                    })
+                    return
+                }
+                res.status(200).send({
+                    code: 200,
+                    msg: '数据库查询成功!',
+                    data: result,
+                    err: null
+                })
+            });
+
+        }
+        
     })
 })
 
