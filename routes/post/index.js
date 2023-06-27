@@ -99,9 +99,8 @@ router.post('/addDevice', async (req, res) => {
 
 // 客户端关闭，修改数据库中设备在线状态
 router.post('/editOnline', async (req, res) => {
-    let deviceId = req.body.deviceId; // 当前客户端的设备号
-    console.log('接受到客户端关闭');
-    db.query(`SELECT * FROM webRTC WHERE deviceId = ${deviceId} LIMIT 5;`, (err, result) => {
+    let id = req.body.id; // 当前客户端的设备号
+    db.query(`UPDATE webRTC SET online = 0 WHERE id = ${id}`, (err, result) => {
         if (err) {
             res.status(200).send({
                 code: 500,
@@ -117,7 +116,6 @@ router.post('/editOnline', async (req, res) => {
             data: result,
             err: null
         })
-        return
     })
 })
 
