@@ -9,13 +9,14 @@ const mysql = require("mysql");
 //   created_at: '',
 // }
 
+let ENV = process.env.NODE_ENV; // 当前环境
 
 // 建立一个连接池
 const pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
-    user: 'root',
-    password: '123456',
+    user: ENV == 'development' ? 'root' : 'public',
+    password: ENV == 'development' ? '123456' : 'aLffiwPtejDP27LT',
     database: 'public',
     port: '3306',
 });
